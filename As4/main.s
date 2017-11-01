@@ -85,14 +85,16 @@ main:
 	movl	$B, %esi
 	movl	$A, %edi
 	call	matrix_prod
-	movl	$4, %esi
-	movl	$A, %edi
-	call	print_matrix
-	movl	$4, %esi
-	movl	$B, %edi
-	call	print_matrix
+	movl	$4, %ecx
+	movl	$G, %edx
+	movl	$B2, %esi
+	movl	$A2, %edi
+	call	matrix_prod
 	movl	$4, %esi
 	movl	$C, %edi
+	call	print_matrix
+	movl	$4, %esi
+	movl	$G, %edi
 	addq	$8, %rsp
 	.cfi_def_cfa_offset 8
 	jmp	print_matrix
@@ -103,9 +105,52 @@ main:
 .LCOLDE2:
 	.section	.text.startup
 .LHOTE2:
+	.comm	G,16,16
 	.comm	C,16,16
-	.globl	B
+	.globl	B2
 	.data
+	.align 16
+	.type	B2, @object
+	.size	B2, 16
+B2:
+	.byte	2
+	.byte	1
+	.byte	12
+	.byte	2
+	.byte	2
+	.byte	4
+	.byte	13
+	.byte	2
+	.byte	10
+	.byte	11
+	.byte	4
+	.byte	0
+	.byte	1
+	.byte	2
+	.byte	2
+	.byte	12
+	.globl	A2
+	.align 16
+	.type	A2, @object
+	.size	A2, 16
+A2:
+	.byte	3
+	.byte	10
+	.byte	1
+	.byte	3
+	.byte	5
+	.byte	1
+	.byte	11
+	.byte	0
+	.byte	0
+	.byte	10
+	.byte	1
+	.byte	1
+	.byte	1
+	.byte	0
+	.byte	6
+	.byte	2
+	.globl	B
 	.align 16
 	.type	B, @object
 	.size	B, 16
@@ -131,7 +176,7 @@ B:
 	.type	A, @object
 	.size	A, 16
 A:
-	.byte	3
+	.byte	5
 	.byte	11
 	.byte	10
 	.byte	3

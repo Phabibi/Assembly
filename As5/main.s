@@ -9,22 +9,30 @@
 comp:
 .LFB24:
 	.cfi_startproc
-	movss	(%rdi), %xmm0
-	movss	(%rsi), %xmm1
+	movss	(%rdi), %xmm1
+	movss	(%rsi), %xmm0
 	ucomiss	%xmm1, %xmm0
-	ja	.L3
-	ucomiss	%xmm0, %xmm1
 	ja	.L4
+	ucomiss	%xmm0, %xmm1
+	jp	.L8
+	je	.L5
+	ja	.L6
+.L8:
 	rep ret
 	.p2align 4,,10
 	.p2align 3
-.L4:
-	movl	$-1, %eax
+.L5:
+	movl	$1, %eax
 	ret
 	.p2align 4,,10
 	.p2align 3
-.L3:
-	movl	$1, %eax
+.L4:
+	xorl	%eax, %eax
+	ret
+	.p2align 4,,10
+	.p2align 3
+.L6:
+	movl	$-1, %eax
 	ret
 	.cfi_endproc
 .LFE24:
@@ -83,14 +91,14 @@ main:
 	call	puts
 	leaq	20(%rsp), %rax
 	leaq	112(%rsp), %rdx
-	movl	$0x5060000f, 16(%rsp)
+	movl	$0x50600055, 16(%rsp)
 	.p2align 4,,10
 	.p2align 3
-.L8:
-	movl	$0x43800005, (%rax)
+.L12:
+	movl	$0x4380000e, (%rax)
 	addq	$4, %rax
 	cmpq	%rax, %rdx
-	jne	.L8
+	jne	.L12
 	movl	$.LC6, %esi
 	movl	$1, %edi
 	xorl	%eax, %eax
@@ -125,10 +133,10 @@ main:
 	movl	$-1840700269, %r8d
 	movsd	.LC9(%rip), %xmm2
 	movl	$1431655766, %r9d
-	jmp	.L9
+	jmp	.L13
 	.p2align 4,,10
 	.p2align 3
-.L11:
+.L15:
 	movl	%esi, %eax
 	movl	%esi, %ecx
 	imull	%r9d
@@ -142,7 +150,7 @@ main:
 	addq	$4, %rdi
 	notl	%ecx
 	addl	$2, %ecx
-.L9:
+.L13:
 	movl	%esi, %eax
 	pxor	%xmm1, %xmm1
 	imull	%r8d
@@ -164,7 +172,7 @@ main:
 	cvtsd2ss	%xmm1, %xmm1
 	movss	%xmm1, (%rdi)
 	addss	%xmm1, %xmm0
-	jne	.L11
+	jne	.L15
 	movl	$.LC6, %esi
 	movl	$1, %edi
 	xorl	%eax, %eax
@@ -180,6 +188,11 @@ main:
 	xorl	%eax, %eax
 	call	__printf_chk
 	leaq	112(%rsp), %rdi
+	movl	$comp, %ecx
+	movl	$4, %edx
+	movl	$50, %esi
+	call	qsort
+	leaq	112(%rsp), %rdi
 	movl	$50, %esi
 	call	sum_float
 	call	f_printbits
@@ -190,12 +203,12 @@ main:
 	call	puts
 	movq	312(%rsp), %rax
 	xorq	%fs:40, %rax
-	jne	.L16
+	jne	.L20
 	addq	$328, %rsp
 	.cfi_remember_state
 	.cfi_def_cfa_offset 8
 	ret
-.L16:
+.L20:
 	.cfi_restore_state
 	call	__stack_chk_fail
 	.cfi_endproc
@@ -208,7 +221,7 @@ main:
 	.section	.rodata.cst4,"aM",@progbits,4
 	.align 4
 .LC4:
-	.long	1348468751
+	.long	1348468821
 	.section	.rodata.cst8,"aM",@progbits,8
 	.align 8
 .LC9:
